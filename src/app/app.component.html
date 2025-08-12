@@ -1,0 +1,81 @@
+<div class="col-12" style="text-align: center;">
+  <h1>Search the game wallpaper that you want to download</h1>
+</div>
+<div class="col-12">
+  <label>Select image format: </label>
+  <select name="ddl_format" (change)="formatChange($event)">
+    <option value="png">PNG</option>
+    <option value="jpg">JPG</option>
+    <option value="webp">WEBP</option>
+  </select>
+  <label>Select image resolution width size:</label>
+  <input type="number" id="txt_width" min="1" max="4096">
+  <label>Select image resolution height size:</label>
+  <input type="number" id="txt_height" min="1" max="4096">
+  <div class="tooltips">
+    <i class="bi bi-question-circle-fill">
+      <span class="tooltiptext">If none width or height are set (or both are 0), than the images will be displayed on their full resolution.</span>
+    </i>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="setImageSizeFromScreenSize()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707m0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707m-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707"></path>
+    </svg>
+    Screen Size
+  </button>
+  <label class="switch">
+    <input type="checkbox" [(ngModel)]="includeScreenshot" (change)="switchChange($event)">
+    <span class="slider round"></span>
+  </label>
+</div>
+<div class="col-12" style="text-align: center;">
+  <input type="text" id="txt_game" (input)="onInput($event)" style="width: 70%" autocomplete="off" />
+</div>
+<div class="col-12">
+  <ul class="pill-group" *ngIf="autoSuggestList.length > 0">
+    <!-- @for (item of [{ title: 'Learn with Tutorials', link: 'https://angular.dev/tutorials' }]; track item.title) { -->
+    @for (item of this.autoSuggestList; track item) {
+      <li
+        class="pill"
+        target="_blank"
+        rel="noopener"
+        (click)="getImages(item)"
+      >
+        <img src="{{ item.iconUrl }}?w=100&h=100" />
+        @for (itemIconClass of item.iconClass; track itemIconClass) {
+          <i class="{{ itemIconClass }}"></i>
+        }
+        <span>{{ item.title }}</span>
+        <svg
+          height="14"
+          viewBox="0 -960 960 960"
+          fill="currentColor"
+        >
+          <path
+            d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"
+          />
+        </svg>
+      </li>
+    }
+  </ul>
+</div>
+<!-- @if(imagesXbox.length > 0){
+  <div class="col-12">
+    <img src="{{ imagesXbox[0].data!.src }}?{{imageFormat}}{{imageSize}}">
+  </div>
+} -->
+<gallery id="glr_xbox" *ngIf="galleryXbox.length > 0" [items]="galleryXbox" bullets bulletPosition="bottom" thumbs (itemClick)="openInNewTab($event, galleryXbox)"></gallery>
+<gallery id="glr_playstation" *ngIf="galleryPlayStation.length > 0" [items]="galleryPlayStation" bullets bulletPosition="bottom" thumbs (itemClick)="openInNewTab($event, galleryPlayStation)"></gallery>
+<!-- <gallery id="glr_playstationPage" *ngIf="imagesPlayStationPage.length > 0" [items]="imagesPlayStationPage" bullets bulletPosition="bottom" thumbs (itemClick)="openInNewTab($event, imagesPlayStationPage)"></gallery> -->
+
+<!-- <div class="social-links">
+  <a href="https://www.youtube.com/channel/UCbn1OgGei-DV7aSRo_HaAiw">
+    <svg alt="Youtube">
+      <path
+        d="M27.4896 1.52422C27.9301 1.96749 28.2463 2.51866 28.4068 3.12258C29.0004 5.35161 29.0004 10 29.0004 10C29.0004 10 29.0004 14.6484 28.4068 16.8774C28.2463 17.4813 27.9301 18.0325 27.4896 18.4758C27.0492 18.9191 26.5 19.2389 25.8972 19.4032C23.6778 20 14.8068 20 14.8068 20C14.8068 20 5.93586 20 3.71651 19.4032C3.11363 19.2389 2.56449 18.9191 2.12405 18.4758C1.68361 18.0325 1.36732 17.4813 1.20683 16.8774C0.613281 14.6484 0.613281 10 0.613281 10C0.613281 10 0.613281 5.35161 1.20683 3.12258C1.36732 2.51866 1.68361 1.96749 2.12405 1.52422C2.56449 1.08095 3.11363 0.76113 3.71651 0.596774C5.93586 0 14.8068 0 14.8068 0C14.8068 0 23.6778 0 25.8972 0.596774C26.5 0.76113 27.0492 1.08095 27.4896 1.52422ZM19.3229 10L11.9036 5.77905V14.221L19.3229 10Z"
+      />
+    </svg>
+  </a>
+</div> -->
+
+<router-outlet />
